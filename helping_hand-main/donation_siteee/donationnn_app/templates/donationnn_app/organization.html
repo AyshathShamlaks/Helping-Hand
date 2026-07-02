@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ organization.name }} - Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #356ce2;
+            --primary-dark: #4e6ec6;
+            --secondary-color: #e79473;
+            --secondary-dark: #e2cfc4;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --text-color: #1e293b;
+            --light-text: #64748b;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand i {
+            margin-right: 0.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .org-header {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .org-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+        
+        .org-title {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .org-title i {
+            color: var(--secondary-color);
+        }
+        
+        .org-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .info-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            background-color: #f1f5f9;
+            padding: 1.2rem;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 250px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .info-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.1);
+            padding: 0.8rem;
+            border-radius: 50%;
+        }
+        
+        .info-card h3 {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .info-card p {
+            color: var(--light-text);
+            font-size: 1rem;
+        }
+        
+        .add-item-form,
+        .donation-form,
+        .search-form {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        h2 i {
+            color: var(--secondary-color);
+        }
+        
+        form p {
+            margin-bottom: 1.2rem;
+        }
+        
+        form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        form input[type="text"],
+        form input[type="number"],
+        form textarea,
+        form select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        form input[type="text"]:focus,
+        form input[type="number"]:focus,
+        form textarea:focus,
+        form select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .needed-items {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .items-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .item-card {
+            display: flex;
+            gap: 1rem;
+            background-color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .item-icon {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            background-color: rgba(249, 115, 22, 0.1);
+            padding: 0.8rem;
+            border-radius: 50%;
+            height: fit-content;
+        }
+        
+        .item-card h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-card p {
+            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+        
+        .item-card small {
+            display: block;
+            color: var(--light-text);
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .item-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .item-card img:hover {
+            transform: scale(1.02);
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background-color: #e2e8f0;
+            transform: translateX(-5px);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .org-title {
+                font-size: 1.8rem;
+            }
+            
+            .items-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <i class="fas fa-hands-helping"></i>
+            Helping Hand
+        </a>
+        <div class="nav-links">
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'donate' %}">Donate</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="org-header">
+            <h1 class="org-title">
+                <i class="fas fa-building"></i>
+                {{ organization.org_name }}
+            </h1>
+            <div class="org-info">
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt info-icon"></i>
+                    <div>
+                        <h3>Location</h3>
+                        <p>{{ organization.location }}</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-tag info-icon"></i>
+                    <div>
+                        <h3>Category</h3>
+                        <p>{{ organization.category }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Item Form (Visible only to org_rep) -->
+        {% if request.user.role == 'org_rep' %}
+        <div class="add-item-form">
+            <h2><i class="fas fa-plus"></i> Add New Item</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" name="add_item" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Add Item
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Donation Form (Visible to donors) -->
+        {% if request.user.role == 'donor' %}
+        <div class="donation-form">
+            <h2><i class="fas fa-gift"></i> Donate Now</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ donation_form.as_p }}
+                <button type="submit" name="donate" class="btn btn-primary">
+                    <i class="fas fa-hand-holding-heart"></i> Donate
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Category Search Form -->
+        <div class="search-form">
+            <h2><i class="fas fa-search"></i> Search Items by Category</h2>
+            <form method="get" action="{% url 'organization_detail' org_id=organization.id %}">
+                <label for="category">Select Category:</label>
+                <select name="category" id="category">
+                    <option value="">All Categories</option>
+                    <option value="household_essentials" {% if category == "household_essentials" %}selected{% endif %}>Household Essentials</option>
+                    <option value="clothing" {% if category == "clothing" %}selected{% endif %}>Clothing</option>
+                    <option value="footwear" {% if category == "footwear" %}selected{% endif %}>Footwear</option>
+                    <option value="grains" {% if category == "grains" %}selected{% endif %}>Grains</option>
+                    <option value="pulses" {% if category == "pulses" %}selected{% endif %}>Pulses</option>
+                    <option value="mobility_aids" {% if category == "mobility_aids" %}selected{% endif %}>Mobility Aids</option>
+                    <option value="educational_supplies" {% if category == "educational_supplies" %}selected{% endif %}>Educational Supplies</option>
+                </select>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+
+        <!-- List of Needed Items -->
+        <div class="needed-items">
+            <h2><i class="fas fa-box-open"></i> Needed Items</h2>
+            <ul class="items-list">
+                {% for item in items %}
+                <li class="item-card">
+                    <i class="fas fa-gift item-icon"></i>
+                    <div>
+                        <h3>{{ item.item_name }}</h3>
+                        <p>{{ item.description }}</p>
+                        <small>Quantity needed: {{ item.quantity_needed }}</small>
+                        {% if item.item_picture %}
+                            <img src="{{ item.item_picture.url }}" alt="{{ item.item_name }}" width="200">
+                        {% endif %}
+                        <!-- Update and Delete Buttons (Visible only to org_rep) -->
+                        {% if request.user.role == 'org_rep' %}
+                        <div class="item-actions">
+                            <a href="{% url 'update_item' item.id %}" class="btn btn-secondary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'delete_item' item.id %}" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <a href="{% url 'donate' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Back to Donate
+        </a>
+    </div>
+</body>
+</html>
